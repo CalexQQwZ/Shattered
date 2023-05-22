@@ -1,10 +1,9 @@
 package Game;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import java.util.ArrayList;
-
-public class Card {
+public class Card extends Actor {
     private String name;
     private int healthPoints;
     private int damage;

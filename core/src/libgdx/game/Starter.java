@@ -2,37 +2,40 @@ package libgdx.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Starter extends ApplicationAdapter {
+	StageNew stage;
+	Group group;
+	Card card1;
+	Card card2;
+	Card card3;
+	Card card4;
+	Card card5;
 	SpriteBatch batch;
 	Texture img;
 	Texture deck_img;
 	Texture card_img;
-	float x,y;
-	float directionX;
-	float directionY;
-
-	float currX, currY;
-
-
-
-	MouseAdapter mouseAdapter1 = new MouseAdapter();
-
-	private BitmapFont FontRed1;
-
-	public class MouseAdapter extends InputAdapter {
+/*	public class MouseAdapter extends InputAdapter {
 
 		@Override
 		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-			currX = screenX;
-			currY = Math.abs(1080 - screenY);
-			return super.touchDown(screenX, screenY, pointer, button);
+			Actor hitCard = stage.hit(screenX,screenY,false);
+			if (hitCard != null) {
+				System.out.println("we hit");
+				return true;
+			}
+			else{
+				System.out.println("we missed");
+				return false;
+			}
+			//return super.touchDown(screenX, screenY, pointer, button);
 		}
 
 		@Override
@@ -50,7 +53,7 @@ public class Starter extends ApplicationAdapter {
 		public boolean mouseMoved(int screenX, int screenY) {
 			return super.mouseMoved(screenX, screenY);
 		}
-	}
+	}*/
 
 
 	@Override
@@ -60,52 +63,41 @@ public class Starter extends ApplicationAdapter {
 		deck_img = new Texture("card_back.png");
 		card_img = new Texture ("card_hearts_A.png");
 
-		OrthographicCamera cam;
-		float cameraWidth = 1920;
-		float cameraHeight = 1080;
-		cam = new OrthographicCamera(cameraWidth, cameraHeight);
-		cam.position.set(1920, 1080,0);
-		cam.update();
+		stage = new StageNew();
+		group = new Group();
+		card1 = new Card(card_img);
+		card2 = new Card(card_img);
+		card3 = new Card(card_img);
+		card4 = new Card(card_img);
+		card5 = new Card(card_img);
+		card1.setPosition(400,250);
+		card2.setPosition(600,250);
+		card3.setPosition(800,250);
+		card4.setPosition(1000,250);
+		card5.setPosition(1200,250);
+		group.addActor(card1);
+		group.addActor(card2);
+		group.addActor(card3);
+		group.addActor(card4);
+		group.addActor(card5);
+		stage.addActor(group);
+		Gdx.input.setInputProcessor(stage);
 
 		batch = new SpriteBatch();
 
-		FontRed1 = new BitmapFont();
-		FontRed1.setColor(Color.RED); //Красный
-
-		x = 0;
-		y = 0;
 	}
+
 
 	@Override
 	public void render () {
-
 		ScreenUtils.clear(0, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, x, y);
-		/*batch.draw(deck_img, 1700, 100);
-		batch.draw(card_img, 1500, 100);
-		batch.draw(card_img, 1300, 100);
-		batch.draw(card_img, 1100, 100);
-		batch.draw(card_img, 900, 100);
-		batch.draw(card_img, 700, 100);*/
-		Gdx.input.setInputProcessor(mouseAdapter1);
-		FontRed1.draw(batch, "x = " + currX + " y = " + currY, currX, currY);
-
-		batch.end();
-		if (x >= 1920 || y >= 1080){
-			directionX = -16f;
-			directionY = -9f;
-		}
-		if (x <= 0 || y <= 0){
-			directionX = 16f;
-			directionY = 9f;
-		}
-		x += directionX;
-		y += directionY;
+		//stage.act();
+		stage.draw();
 	}
 	
 	@Override
 	public void dispose () {
+		stage.dispose();
 		batch.dispose();
 		img.dispose();
 	}
