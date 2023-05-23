@@ -1,7 +1,4 @@
-package Game;
-
-import java.util.ArrayList;
-import java.util.Scanner;
+package libgdx.game;
 
 public class GameLogic {
     private int turnCount;

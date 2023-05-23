@@ -1,4 +1,4 @@
-package Game;
+package libgdx.game;
 
 import java.util.ArrayList;
 

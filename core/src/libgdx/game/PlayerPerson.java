@@ -1,21 +1,27 @@
-package Game;
+package libgdx.game;
 
-public class PlayerPerson {
-    protected int id;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+
+public class PlayerPerson extends Actor {
     protected int healthPoints;
     protected int conversant;//Осознание;
     protected int lassitude;//Усталость;
-    protected boolean yourTurn;
+    protected boolean player; // 0 - Enemy. 1 - Player
+    Texture image;
 
-    public PlayerPerson(int healthPoints, int conversant, int lassitude, boolean yourTurn) {
+    public PlayerPerson(int healthPoints, int conversant, int lassitude) {
         this.healthPoints = healthPoints;
         this.conversant = conversant;
         this.lassitude = lassitude;
-        this.yourTurn = yourTurn;
+        image = new Texture("card_back.png");
+        setTouchable(Touchable.disabled);
     }
-
-    public int getId() {
-        return id;
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.draw(image,getX(),getY(),getWidth(),getHeight());
     }
     public int getHealthPoints() {
         return healthPoints;
@@ -35,10 +41,10 @@ public class PlayerPerson {
     public void setLassitude(int lassitude) {
         this.lassitude = lassitude;
     }
-    public boolean isYourTurn() {
-        return yourTurn;
+    public void setPlayer(boolean player){
+        this.player = player;
     }
-    public void setYourTurn(boolean yourTurn) {
-        this.yourTurn = yourTurn;
+    public boolean isPlayer(){
+        return player;
     }
 }
