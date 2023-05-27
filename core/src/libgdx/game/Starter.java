@@ -48,7 +48,7 @@ public class Starter extends ApplicationAdapter {
 	@Override
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
-		stage.act(30);
+		//stage.act(30);
 		//System.out.println(gameLoop.player.conversant);
 		//System.out.println(gameLoop.enemy.conversant);
 		stage.draw();

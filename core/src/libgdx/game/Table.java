@@ -174,13 +174,14 @@ public class Table {
                 iterator2.remove();
             }
         }
-    }
+    } //// надо мощно подумоть но походу все правильно
     public void attackCard(Card attackingCard, Card attackedCard) {
             /*if(attackedId == 100){
                 player.setHealthPoints( player.getHealthPoints() - enemyTable.get(attackingId).getDamage() );
             }
             else{*/
         attackedCard.setHealthPoints(attackedCard.getHealthPoints() - attackingCard.getDamage());
+        attackingCard.setHealthPoints(attackingCard.getHealthPoints() - attackedCard.getDamage());
         attackingCard.setOnCooldown(true);
             /*if(attackedId == 100){
                 enemy.setHealthPoints( enemy.getHealthPoints() - playerTable.get(attackingId).getDamage() );
@@ -190,14 +191,15 @@ public class Table {
     public void attackPlayer(Card attackingCard, PlayerPerson attackedPerson){
         attackedPerson.setHealthPoints(attackedPerson.getHealthPoints() - attackingCard.getDamage());
         attackingCard.setOnCooldown(true);
-        System.out.println("End");
     }
     public void switchCurrentPlayer(){
         if(currentPlayer.isPlayer()){
             currentPlayer = enemy;
+            System.out.println("End of the player turn");
         }
         else{
             currentPlayer = player;
+            System.out.println("End of the enemy turn");
         }
     }
     public void endTurn(){
@@ -215,8 +217,8 @@ public class Table {
             }
         }
         checkDiedAll();
-        if(currentPlayer.getConversant() <=10){
-            currentPlayer.setConversant(currentPlayer.getConversant() + 3);
+        if(currentPlayer.getConversant() <=9){
+            currentPlayer.setConversant(currentPlayer.getConversant() + 1);
         }
         else{
             currentPlayer.setConversant(10);
@@ -311,14 +313,14 @@ public class Table {
     public void playOnTableUnderMouse(int screenX, int screenY) {
         if (targetCardNew.getName() == "table" && screenX > 300 && screenX < 1500 && screenY > 280 && screenY < 800) {
             if (targetCardOld.isInHand() && isCardDrawable(targetCardOld)) {
-                if (targetCardOld.isPlayer() && playerTable.size() <= 5) {
+                if (targetCardOld.isPlayer() && playerTable.size() < 5) {
                     setCoordinateTablePlayer(targetCardOld);
                     playerTable.add(targetCardOld);
                     playerHand.remove(targetCardOld);
                     targetCardOld.playOnTable();
                     targetCardOld.setFromHand(true);
                     currentPlayer.setConversant(currentPlayer.getConversant() - targetCardOld.getManaCost());
-                } else if(!targetCardOld.isPlayer() && enemyTable.size() <= 5){
+                } else if(!targetCardOld.isPlayer() && enemyTable.size() < 5){
                     setCoordinateTableEnemy(targetCardOld);
                     enemyTable.add(targetCardOld);
                     enemyHand.remove(targetCardOld);
