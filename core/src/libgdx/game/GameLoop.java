@@ -8,25 +8,36 @@ public class GameLoop {
     Enemy enemy;
     Table table;
     Deck deck;
-    Button button1, button2;
-    DialogButton dialogButton0,dialogButton1,dialogButton2,dialogButton3,dialogButton4,dialogButton5,dialogButton6;
+    Button button1;
+    Button button2;
+    DialogButton dialogButton0;
+    DialogButton dialogButton1;
+    DialogButton dialogButton2;
+    DialogButton dialogButton3;
+    DialogButton dialogButton4;
+    DialogButton dialogButton5;
+    DialogButton dialogButton6;
+    Watcher watcher;
+    TouchHandler touchHandler;
     //GameLogic gameLogic;
     int comprehension;
     public GameLoop(StageNew stage) {
         this.stage = stage;
+    }
+    public void createDeck(){
         deck = new Deck();
+        deck.createDeck();
     }
     public void createBeforeMatch(){
         player = new Player(30,4,0,comprehension);
         enemy = new Enemy(30,4,0);
-        deck = new Deck();
         table = new Table(stage, this, player, enemy, deck);
+        touchHandler = new TouchHandler(stage, table);
         button1 = new Button(false);
         button2 = new Button(true);
         //gameLogic = new GameLogic();
 
-        deck.createDeck();
-        stage.setTable(table);
+        stage.setTouchHandler(touchHandler);
 
         table.setName("table");
         player.setName("player");
@@ -63,6 +74,10 @@ public class GameLoop {
         dialogButton4.setBounds(800,300, 500,80);
         dialogButton5.setBounds(600,800, 900,80);
         dialogButton6.setBounds(600,600, 900,80);
+        //
+        watcher = new Watcher();
+        watcher.setBounds(1600,20,100,100);
+        watcher.setName("watcher");
 
         stage.clear();
         stage.addActor(dialogButton0);
@@ -87,7 +102,9 @@ public class GameLoop {
         stage.addActor(enemy);
         stage.addActor(button1);
         stage.addActor(button2);
-
+        //
+        stage.addActor(watcher);
+        //
         deck.addCardPlayer(player.getPlayerId());
         deck.addCardEnemy(enemy.getPlayerId());
         table.createDeck();
@@ -100,5 +117,7 @@ public class GameLoop {
             }
         };
         timer.scheduleTask(timerTask, 300);
+
+
     }
 }

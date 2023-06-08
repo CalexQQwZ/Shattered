@@ -6,23 +6,23 @@ public class StageNew extends Stage {
     public StageNew() {
         super();
     }
-    Table table;
+    TouchHandler touchHandler;
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        table.touchDownHandler(screenX,screenY);
+        touchHandler.touchDownHandler(screenX,screenY);
         return super.touchDown(screenX, screenY, pointer, button);
     }
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        table.touchUpHandler(screenX,screenY);
+        touchHandler.touchUpHandler(screenX,screenY);
         return super.touchUp(screenX, screenY, pointer, button);
     }
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        table.touchDraggedHandler(screenX,screenY);
+        touchHandler.touchDraggedHandler(screenX,screenY);
         return super.touchDragged(screenX, screenY, pointer);
     }
-    public void setTable(Table table) {
-        this.table = table;
+    public void setTouchHandler(TouchHandler touchHandler) {
+        this.touchHandler = touchHandler;
     }
 }

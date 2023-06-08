@@ -10,18 +10,15 @@ public class Starter extends ApplicationAdapter {
 	public void create () {
 		stage = new StageNew();
 		gameLoop = new GameLoop(stage);
-		Gdx.input.setInputProcessor(stage);
-
+		gameLoop.createDeck();
 		gameLoop.createBeforeMatch();
+		Gdx.input.setInputProcessor(stage);
 	}
-
-
 	@Override
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
 		stage.draw();
 	}
-	
 	@Override
 	public void dispose () {
 		stage.dispose();

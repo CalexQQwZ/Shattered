@@ -2,10 +2,8 @@ package libgdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -23,13 +21,6 @@ public class Table extends Actor{
     private ArrayList<Card> playerTable = new ArrayList<>();
     private final StageNew stage;
     private final GameLoop gameLoop;
-    private Vector2 tempCoords = new Vector2();
-    private float distX, distY, posX, posY;
-    Actor target;
-    Card targetCardOld, targetCardNew;
-    Button endTurnButton;
-    PlayerPerson attackedPerson;
-    DialogButton dialogButton;
     Texture image;
     Random random;
     int retakeCards;
@@ -48,6 +39,15 @@ public class Table extends Actor{
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(image,getX(),getY(),getWidth(),getHeight());
+    }
+    public PlayerPerson getCurrentPlayer(){
+        return currentPlayer;
+    }
+    public int getTurncounter(){
+        return turncounter;
+    }
+    public int getRetakeCards(){
+        return retakeCards;
     }
     public void setCoordinateHandPlayer(Card card) {
         float x = 710;
@@ -129,6 +129,15 @@ public class Table extends Actor{
             return false;
         }
     }
+    public void attackCard(Card attackingCard, Card attackedCard) {
+        attackedCard.setHealthPoints(attackedCard.getHealthPoints() - attackingCard.getDamage());
+        attackingCard.setHealthPoints(attackingCard.getHealthPoints() - attackedCard.getDamage());
+        attackingCard.setOnCooldown(true);
+    }
+    public void attackPlayer(Card attackingCard, PlayerPerson attackedPerson){
+        attackedPerson.setHealthPoints(attackedPerson.getHealthPoints() - attackingCard.getDamage());
+        attackingCard.setOnCooldown(true);
+    }
     public void takeCardFromDeck(){
         if (!currentPlayer.isPlayer()) {
             if (enemyHand.size() < 5) {
@@ -170,6 +179,14 @@ public class Table extends Actor{
             }
         }
     }
+    public void switchCurrentPlayer(){
+        if(currentPlayer.isPlayer()){
+            currentPlayer = enemy;
+        }
+        else{
+            currentPlayer = player;
+        }
+    }
     public void checkDiedAll(){
         Iterator<Card> iterator1 = enemyTable.iterator();
         Iterator<Card> iterator2 = playerTable.iterator();
@@ -187,23 +204,6 @@ public class Table extends Actor{
                 cardI.remove();
                 iterator2.remove();
             }
-        }
-    }
-    public void attackCard(Card attackingCard, Card attackedCard) {
-        attackedCard.setHealthPoints(attackedCard.getHealthPoints() - attackingCard.getDamage());
-        attackingCard.setHealthPoints(attackingCard.getHealthPoints() - attackedCard.getDamage());
-        attackingCard.setOnCooldown(true);
-    }
-    public void attackPlayer(Card attackingCard, PlayerPerson attackedPerson){
-        attackedPerson.setHealthPoints(attackedPerson.getHealthPoints() - attackingCard.getDamage());
-        attackingCard.setOnCooldown(true);
-    }
-    public void switchCurrentPlayer(){
-        if(currentPlayer.isPlayer()){
-            currentPlayer = enemy;
-        }
-        else{
-            currentPlayer = player;
         }
     }
     public void endTurn(){
@@ -230,81 +230,14 @@ public class Table extends Actor{
         }
         takeCardFromDeck();
     }
-    public void touchDownHandler(int screenX, int screenY){
-        stage.screenToStageCoordinates(tempCoords.set(screenX, screenY));
-        target = stage.hit(tempCoords.x, tempCoords.y, true);
-        targetCardOld = null;
-        targetCardNew = null;
-        endTurnButton = null;
-        attackedPerson = null;
-        dialogButton = null;
-        if(target != null && target.getName().equals("card") ) {
-            targetCardOld = (Card) target;
-            if (targetCardOld.isPlayer() == currentPlayer.isPlayer()) {
-                posX = targetCardOld.getX();
-                posY = targetCardOld.getY();
-                targetCardOld.setWidth(86);
-                targetCardOld.setHeight(86);
-                distX = tempCoords.x - targetCardOld.getX();
-                distY = tempCoords.y - targetCardOld.getY();
-            }
-            else {
-                targetCardOld = null;
-            }
-        }
-        else if(target != null && target.getName().equals("button") ) {
-            endTurnButton = (Button) target;
-            if (endTurnButton.isPlayer() == currentPlayer.isPlayer()) {
-                endTurnButton.setWidth(110);
-                endTurnButton.setHeight(110);
-            } else {
-                endTurnButton = null;
-            }
-        } else if (target != null && target.getName().equals("dialogbutton") ) {
-            dialogButton = (DialogButton) target;
-            dialogButtonHandler();
-        }
-    }
-    public void touchUpHandler(int screenX, int screenY) {
-        if (targetCardOld != null && targetCardOld.getName().equals("card") && retakeCards < 4 && currentPlayer.isPlayer() && turncounter<2 ){
-            newRandomCard();
-        }
-        if (targetCardOld != null && targetCardOld.getName().equals("card")) {
-            targetCardOld.setWidth(64);
-            targetCardOld.setHeight(72);
-            targetCardOld.setX(posX);
-            targetCardOld.setY(posY);
-            target = stage.hit(tempCoords.x, tempCoords.y, false);
-            if (target != null && target.getName().equals("card")) {
-                targetCardNew = (Card) target;
-                attackCardUnderMouse();
-            } else if (target != null && target.getName().equals("table")) {
-                playOnTableUnderMouse(screenX, screenY);
-            } else if (target != null && (target.getName().equals("player") || target.getName().equals("enemy"))) {
-                attackedPerson = (PlayerPerson) target;
-                attackPlayerUnderMouse();
-            }
-        } else if (endTurnButton != null && endTurnButton.getName().equals("button") && (endTurnButton.isPlayer() == currentPlayer.isPlayer())) {
-            endTurnButton.setWidth(100);
-            endTurnButton.setHeight(100);
-            endTurn();
-        }
-    }
-    public void touchDraggedHandler(int screenX, int screenY) {
-        stage.screenToStageCoordinates(tempCoords.set(screenX, screenY));
-        if (targetCardOld != null && targetCardOld.getName().equals("card") ) {
-            targetCardOld.setX(tempCoords.x - distX);
-            targetCardOld.setY(tempCoords.y - distY);
-        }
-    }
-    public void attackCardUnderMouse() {
-        if (targetCardNew.getName().equals("card") && targetCardOld.isOnTable() && isCardAttack(targetCardOld) && isCardsAttackable(targetCardNew) &&
+    public void attackCardUnderMouse(Card targetCardOld, Card targetCardNew) {
+        if (targetCardOld.isOnTable() && isCardAttack(targetCardOld) && isCardsAttackable(targetCardNew) &&
                 (targetCardOld.isPlayer() != targetCardNew.isPlayer()) ) {
             attackCard(targetCardOld, targetCardNew);
             checkDiedAll();
         }
     }
-    public void attackPlayerUnderMouse() {
+    public void attackPlayerUnderMouse(Card targetCardOld, PlayerPerson attackedPerson) {
         if (attackedPerson.getName().equals("player") && !targetCardOld.isPlayer() && targetCardOld.isOnTable() && isCardAttack(targetCardOld)) {
             attackPlayer(targetCardOld,player);
         } else if (attackedPerson.getName().equals("enemy") && targetCardOld.isPlayer() && targetCardOld.isOnTable() && isCardAttack(targetCardOld)) {
@@ -314,8 +247,8 @@ public class Table extends Actor{
             endMatch();
         }
     }
-    public void playOnTableUnderMouse(int screenX, int screenY) {
-        if (target.getName().equals("table") && screenX > 300 && screenX < 1500 && screenY > 280 && screenY < 800 && targetCardOld.isInHand() && isCardDrawable(targetCardOld)) {
+    public void playOnTableUnderMouse(int screenX, int screenY, Card targetCardOld) {
+        if (screenX > 300 && screenX < 1500 && screenY > 280 && screenY < 800 && targetCardOld.isInHand() && isCardDrawable(targetCardOld)) {
             if (targetCardOld.isPlayer() && playerTable.size() < 5) {
                 setCoordinateTablePlayer(targetCardOld);
                 playerTable.add(targetCardOld);
@@ -333,13 +266,13 @@ public class Table extends Actor{
             }
         }
     }
-    public void newRandomCard(){
+    public void newRandomCard(Card targetCardOld){
         targetCardOld.remove();
         playerHand.remove(targetCardOld);
         takeCardFromDeck();
         retakeCards += 1;
     }
-    public void dialogButtonHandler(){
+    public void dialogButtonHandler(DialogButton dialogButton){
         Texture texture;
         switch (dialogButton.getId()){
             case 0 :
@@ -386,7 +319,7 @@ public class Table extends Actor{
                 break;
             case 8 :
                 deck.addCardPlayer(random.nextInt(4));
-                gameLoop.startBeforeMatch();
+                gameLoop.createBeforeMatch();
                 break;
         }
     }
