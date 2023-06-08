@@ -20,17 +20,17 @@ public class Table extends Actor{
     private ArrayList<Card> playerHand = new ArrayList<>();
     private ArrayList<Card> playerTable = new ArrayList<>();
     private final StageNew stage;
-    private final GameLoop gameLoop;
+    private final GameStart gameStart;
     Texture image;
     Random random;
     int retakeCards;
     int turncounter;
-    public Table(StageNew stage, GameLoop gameLoop, Player player, Enemy enemy, Deck deck) {
+    public Table(StageNew stage, GameStart gameLoop, Player player, Enemy enemy, Deck deck) {
         this.player = player;
         this.enemy = enemy;
         currentPlayer = player;
         this.stage = stage;
-        this.gameLoop = gameLoop;
+        this.gameStart = gameLoop;
         this.deck = deck;
         setTouchable(Touchable.disabled);
         image = new Texture("nustol.jpg");
@@ -276,50 +276,50 @@ public class Table extends Actor{
         Texture texture;
         switch (dialogButton.getId()){
             case 0 :
-                gameLoop.answerTheQuestions1();
+                gameStart.answerTheQuestions1();
                 break;
             case 1 :
                 texture = new Texture("you_1.jpg");
                 player.setImage(texture);
-                gameLoop.answerTheQuestions2();
+                gameStart.answerTheQuestions2();
                 player.setPlayerId(1);
                 break;
             case 2 :
                 texture = new Texture("you_2.jpg");
                 player.setImage(texture);
-                gameLoop.answerTheQuestions2();
+                gameStart.answerTheQuestions2();
                 player.setPlayerId(2);
                 break;
             case 3 :
                 texture = new Texture("you_3.jpg");
                 player.setImage(texture);
-                gameLoop.answerTheQuestions2();
+                gameStart.answerTheQuestions2();
                 player.setPlayerId(3);
                 break;
             case 4 :
                 texture = new Texture("you_4.jpg");
                 player.setImage(texture);
-                gameLoop.answerTheQuestions2();
+                gameStart.answerTheQuestions2();
                 player.setPlayerId(4);
                 break;
             case 5 :
                 texture = new Texture("your_enemy_1.jpg");
                 enemy.setImage(texture);
-                gameLoop.startBeforeMatch();
+                gameStart.startBeforeMatch();
                 player.setPlayerId(5);
                 break;
             case 6 :
                 texture = new Texture("your_enemy_2.jpg");
                 enemy.setImage(texture);
-                gameLoop.startBeforeMatch();
+                gameStart.startBeforeMatch();
                 player.setPlayerId(6);
                 break;
             case 7 :
-                gameLoop.createBeforeMatch();
+                gameStart.createBeforeMatch();
                 break;
             case 8 :
-                deck.addCardPlayer(random.nextInt(4));
-                gameLoop.createBeforeMatch();
+                deck.addCardPlayer(3);
+                gameStart.createBeforeMatch();
                 break;
         }
     }

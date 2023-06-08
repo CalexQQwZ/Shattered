@@ -2,7 +2,7 @@ package libgdx.game;
 
 import com.badlogic.gdx.utils.Timer;
 
-public class GameLoop {
+public class GameStart {
     StageNew stage;
     Player player;
     Enemy enemy;
@@ -21,7 +21,7 @@ public class GameLoop {
     TouchHandler touchHandler;
     //GameLogic gameLogic;
     int comprehension;
-    public GameLoop(StageNew stage) {
+    public GameStart(StageNew stage) {
         this.stage = stage;
     }
     public void createDeck(){

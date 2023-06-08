@@ -5,13 +5,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Starter extends ApplicationAdapter {
 	StageNew stage;
-	GameLoop gameLoop;
+	GameStart gameStart;
 	@Override
 	public void create () {
 		stage = new StageNew();
-		gameLoop = new GameLoop(stage);
-		gameLoop.createDeck();
-		gameLoop.createBeforeMatch();
+		gameStart = new GameStart(stage);
+		gameStart.createDeck();
+		gameStart.createBeforeMatch();
 		Gdx.input.setInputProcessor(stage);
 	}
 	@Override
