@@ -1,7 +1,9 @@
 package libgdx.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
@@ -21,7 +23,11 @@ public class Card extends Actor {
     private int sigilId;
     private int effectId;
     Texture image;
-    public Card(String name, boolean player ,int healthPoints, int damage, int manaCost, int modificatorId, int sigilId, int effectId) {
+    private BitmapFont fontHp;
+    private BitmapFont fontMana;
+    private BitmapFont fontDamage;
+    private BitmapFont fontCooldown;
+    public Card(String name, boolean player ,int healthPoints, int damage, int manaCost, int modificatorId, int sigilId, int effectId, Texture texture) {
         super();
         this.player = player;
         this.healthPoints = healthPoints;
@@ -37,10 +43,49 @@ public class Card extends Actor {
         inHand = false;
         onTable = false;
         turnCounter = 0;
-        image = new Texture("card_hearts_A.png");
+        image = texture;
         setWidth(64);
-        setHeight(64);
+        setHeight(72);
         setTouchable(Touchable.enabled);
+        bitmapCreate();
+    }
+    public Card(Card oldCard){
+        super();
+        this.player = oldCard.player;
+        this.healthPoints = oldCard.healthPoints;
+        this.damage = oldCard.damage;
+        this.manaCost = oldCard.manaCost;
+        this.modificatorId = oldCard.modificatorId;
+        this.sigilId = oldCard.sigilId;
+        this.effectId = oldCard.effectId;
+        onCooldown = true;
+        fromHand = false;
+        alive = true;
+        target = false;
+        inHand = false;
+        onTable = false;
+        turnCounter = 0;
+        image = oldCard.image;
+        setWidth(64);
+        setHeight(72);
+        setTouchable(Touchable.enabled);
+        bitmapCreate();
+    }
+    public void bitmapCreate(){
+        fontHp = new BitmapFont();
+        fontMana = new BitmapFont();
+        fontDamage = new BitmapFont();
+        fontCooldown = new BitmapFont();
+
+        fontHp.setColor(Color.GREEN);
+        fontMana.setColor(Color.BLUE);
+        fontDamage.setColor(Color.RED);
+        fontCooldown.setColor(Color.CORAL);
+
+        fontHp.getData().setScale(1);
+        fontMana.getData().setScale(1);
+        fontDamage.getData().setScale(1);
+        fontCooldown.getData().setScale(1);
     }
     public void setImage(Texture image){
         this.image = image;
@@ -48,6 +93,10 @@ public class Card extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(image,getX(),getY(),getWidth(),getHeight());
+        fontHp.draw(batch, Integer.toString(healthPoints) ,getX()+74,getY()+10);
+        fontMana.draw(batch, Integer.toString(manaCost) ,getX()+74,getY()+30 );
+        fontDamage.draw(batch, Integer.toString(damage),getX()+74,getY()+50);
+        fontCooldown.draw(batch, String.valueOf(onCooldown),getX()+74,getY()+70);
     }
     public boolean isOnCooldown() {
         return onCooldown;
@@ -113,5 +162,8 @@ public class Card extends Actor {
     }
     public boolean isPlayer(){
         return player;
+    }
+    public void setPlayer(boolean player){
+        this.player = player;
     }
 }

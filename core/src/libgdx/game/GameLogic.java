@@ -1,8 +1,8 @@
 package libgdx.game;
 
 public class GameLogic {
-    private int turnCount;
-    Card currentCard;
+    //private int turnCount;
+    //Card currentCard;
     /*
     public void id1Modificator(){
         if (currentCard.isFromHand() == true) {

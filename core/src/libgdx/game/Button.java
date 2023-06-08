@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-
 public class Button extends Actor {
     Texture image;
     boolean player;
@@ -19,5 +18,8 @@ public class Button extends Actor {
     }
     public boolean isPlayer(){
         return player;
+    }
+    public void setImage(Texture texture){
+        this.image = texture;
     }
 }

@@ -9,10 +9,8 @@ public class Player extends PlayerPerson{
         this.comprehension = comprehension;
     }
 
-    public void setStart(){
-        this.healthPoints = 20;
-        this.conversant = 4;
-        this.comprehension = 0;
-        this.lassitude = 0;
+
+    public int getComprehension(){
+        return comprehension;
     }
 }

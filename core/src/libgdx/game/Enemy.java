@@ -6,9 +6,4 @@ public class Enemy extends PlayerPerson{
         player = false;
     }
 
-    public void setStart() {
-        this.healthPoints = 20;
-        this.conversant = 4;
-        this.lassitude = 0;
-    }
 }
